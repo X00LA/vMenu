@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using CitizenFX.Core;
 using static CitizenFX.Core.UI.Screen;
 using static CitizenFX.Core.Native.API;
 using static vMenuClient.CommonFunctions;
+
 using static vMenuShared.ConfigManager;
 using static vMenuShared.PermissionsManager;
 
@@ -188,7 +190,7 @@ namespace vMenuClient
                             }
                             EndFindKvp(handle);
 
-                            Dictionary<string, dynamic> kvps = new Dictionary<string, dynamic>();
+                            ConcurrentDictionary<string, dynamic> kvps = new ConcurrentDictionary<string, dynamic>();
                             foreach (var kvp in names)
                             {
                                 int type = 0; // 0 = string, 1 = float, 2 = int.
@@ -221,18 +223,18 @@ namespace vMenuClient
                                         var s = GetResourceKvpString(kvp);
                                         if (s.StartsWith("{") || s.StartsWith("["))
                                         {
-                                            kvps.Add(kvp, JsonConvert.DeserializeObject(s));
+                                            kvps.TryAdd(kvp, JsonConvert.DeserializeObject(s));
                                         }
                                         else
                                         {
-                                            kvps.Add(kvp, GetResourceKvpString(kvp));
+                                            kvps.TryAdd(kvp, GetResourceKvpString(kvp));
                                         }
                                         break;
                                     case 1:
-                                        kvps.Add(kvp, GetResourceKvpFloat(kvp));
+                                        kvps.TryAdd(kvp, GetResourceKvpFloat(kvp));
                                         break;
                                     case 2:
-                                        kvps.Add(kvp, GetResourceKvpInt(kvp));
+                                        kvps.TryAdd(kvp, GetResourceKvpInt(kvp));
                                         break;
                                 }
                             }
@@ -242,10 +244,10 @@ namespace vMenuClient
                             Debug.WriteLine(@JsonConvert.SerializeObject(Permissions, Formatting.None));
 
                             Debug.WriteLine("\n\nDumping vmenu server configuration settings:");
-                            var settings = new Dictionary<string, string>();
+                            var settings = new ConcurrentDictionary<string, string>();
                             foreach (var a in Enum.GetValues(typeof(Setting)))
                             {
-                                settings.Add(a.ToString(), GetSettingsString((Setting)a));
+                                settings.TryAdd(a.ToString(), GetSettingsString((Setting)a));
                             }
                             Debug.WriteLine(@JsonConvert.SerializeObject(settings, Formatting.None));
                             Debug.WriteLine("\nEnd of vMenu dump!");
