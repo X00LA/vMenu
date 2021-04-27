@@ -172,14 +172,14 @@ namespace vMenuClient
             //if (data.ContainsKey("version"))
             //{
             //    //CommonFunctions.Log("New Version: " + data["version"] + "\n");
-            //    var colors = new Dictionary<string, int>();
+            //    var colors = new ConcurrentDictionary<string, int>();
             //    foreach (Newtonsoft.Json.Linq.JProperty c in data["colors"])
             //    {
             //        colors.Add(c.Name, (int)c.Value);
             //    }
             //    vi.colors = colors;
             //    vi.customWheels = (bool)data["customWheels"];
-            //    var extras = new Dictionary<int, bool>();
+            //    var extras = new ConcurrentDictionary<int, bool>();
             //    foreach (Newtonsoft.Json.Linq.JProperty e in data["extras"])
             //    {
             //        extras.Add(int.Parse(e.Name), (bool)e.Value);
@@ -187,7 +187,7 @@ namespace vMenuClient
             //    vi.extras = extras;
             //    vi.livery = (int)data["livery"];
             //    vi.model = (uint)data["model"];
-            //    var mods = new Dictionary<int, int>();
+            //    var mods = new ConcurrentDictionary<int, int>();
             //    foreach (Newtonsoft.Json.Linq.JProperty m in data["mods"])
             //    {
             //        mods.Add(int.Parse(m.Name.ToString()), (int)m.Value);
@@ -211,7 +211,7 @@ namespace vMenuClient
             //{
             //    //CommonFunctions.Log("Old: " + json + "\n");
             //    var dict = JsonToDictionary(json);
-            //    var colors = new Dictionary<string, int>()
+            //    var colors = new ConcurrentDictionary<string, int>()
             //    {
             //        ["primary"] = int.Parse(dict["primaryColor"]),
             //        ["secondary"] = int.Parse(dict["secondaryColor"]),
@@ -226,7 +226,7 @@ namespace vMenuClient
             //        ["tyresmokeG"] = int.Parse(dict["tireSmokeG"]),
             //        ["tyresmokeB"] = int.Parse(dict["tireSmokeB"]),
             //    };
-            //    var extras = new Dictionary<int, bool>();
+            //    var extras = new ConcurrentDictionary<int, bool>();
             //    for (int i = 0; i < 15; i++)
             //    {
             //        if (dict["extra" + i] == "true")
@@ -239,7 +239,7 @@ namespace vMenuClient
             //        }
             //    }
 
-            //    var mods = new Dictionary<int, int>();
+            //    var mods = new ConcurrentDictionary<int, int>();
             //    int skip = 8 + 24 + 2 + 1;
             //    foreach (var mod in dict)
             //    {
