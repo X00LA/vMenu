@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -1124,7 +1125,7 @@ namespace vMenuClient
             Trains = 21
              */
 
-            public static Dictionary<string, List<string>> VehicleClasses { get; } = new Dictionary<string, List<string>>()
+            public static ConcurrentDictionary<string, List<string>> VehicleClasses { get; } = new ConcurrentDictionary<string, List<string>>()
             {
                 [GetLabelText("VEH_CLASS_0")] = Compacts,
                 [GetLabelText("VEH_CLASS_1")] = Sedans,
