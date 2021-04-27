@@ -332,6 +332,7 @@ namespace vMenuShared
             MSRestoreAppearance,
             MSRestoreWeapons,
             MSDriftMode,
+            MSEntitySpawner,
             #endregion
 
             // Voice Chat
