@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -53,7 +54,7 @@ namespace vMenuClient
         public float VehicleTorqueMultiplierAmount { get; private set; } = 2f;
         public float VehiclePowerMultiplierAmount { get; private set; } = 2f;
 
-        private Dictionary<MenuItem, int> vehicleExtras = new Dictionary<MenuItem, int>();
+        private ConcurrentDictionary<MenuItem, int> vehicleExtras = new ConcurrentDictionary<MenuItem, int>();
         #endregion
 
         #region CreateMenu()
@@ -507,10 +508,10 @@ namespace vMenuClient
                             if (vehicle.IsVisible)
                             {
                                 // Check the visibility of all peds inside before setting the vehicle as invisible.
-                                Dictionary<Ped, bool> visiblePeds = new Dictionary<Ped, bool>();
+                                ConcurrentDictionary<Ped, bool> visiblePeds = new ConcurrentDictionary<Ped, bool>();
                                 foreach (Ped p in vehicle.Occupants)
                                 {
-                                    visiblePeds.Add(p, p.IsVisible);
+                                    visiblePeds.TryAdd(p, p.IsVisible);
                                 }
 
                                 // Set the vehicle invisible or invincivble.
@@ -1821,7 +1822,7 @@ namespace vMenuClient
                 VehicleModMenu.AddMenuItem(bulletProofTires);
                 // Create a list of tire smoke options.
                 List<string> tireSmokes = new List<string>() { "Red", "Orange", "Yellow", "Gold", "Light Green", "Dark Green", "Light Blue", "Dark Blue", "Purple", "Pink", "Black" };
-                Dictionary<string, int[]> tireSmokeColors = new Dictionary<string, int[]>()
+                ConcurrentDictionary<string, int[]> tireSmokeColors = new ConcurrentDictionary<string, int[]>()
                 {
                     ["Red"] = new int[] { 244, 65, 65 },
                     ["Orange"] = new int[] { 244, 167, 66 },
