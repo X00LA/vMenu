@@ -599,6 +599,7 @@ namespace vMenuClient
                         PlayersList.RequestPlayerList();
 
                         await OnlinePlayersMenu.UpdatePlayerlist();
+                        OnlinePlayersMenu.UpdatePlayerListTimer();
                         menu.RefreshIndex();
                     }
                 };
