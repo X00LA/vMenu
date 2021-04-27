@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -337,7 +338,7 @@ namespace vMenuShared
             #endregion
         };
 
-        public static Dictionary<Permission, bool> Permissions { get; private set; } = new Dictionary<Permission, bool>();
+        public static ConcurrentDictionary<Permission, bool> Permissions { get; private set; } = new ConcurrentDictionary<Permission, bool>();
         public static bool ArePermissionsSetup { get; set; } = false;
 
 
@@ -361,7 +362,7 @@ namespace vMenuShared
         /// <returns></returns>
         public static bool IsAllowed(Permission permission, bool checkAnyway = false) => IsAllowedClient(permission, checkAnyway);
 
-        private static Dictionary<Permission, bool> allowedPerms = new Dictionary<Permission, bool>();
+        private static ConcurrentDictionary<Permission, bool> allowedPerms = new ConcurrentDictionary<Permission, bool>();
         /// <summary>
         /// Private function that handles client side permission requests.
         /// </summary>
@@ -415,7 +416,7 @@ namespace vMenuShared
         }
 #endif
 
-        private static Dictionary<Permission, List<Permission>> parentPermissions = new Dictionary<Permission, List<Permission>>();
+        private static ConcurrentDictionary<Permission, List<Permission>> parentPermissions = new ConcurrentDictionary<Permission, List<Permission>>();
 
         /// <summary>
         /// Gets the current permission and all parent permissions.
@@ -462,14 +463,14 @@ namespace vMenuShared
                 return;
             }
 
-            Dictionary<Permission, bool> perms = new Dictionary<Permission, bool>();
+            ConcurrentDictionary<Permission, bool> perms = new ConcurrentDictionary<Permission, bool>();
 
             // If enabled in the permissions.cfg (disabled by default) then this will give me (only me) the option to trigger some debug commands and 
             // try out menu options. This only works if I'm in-game on your server, and you have enabled server debugging mode, this way I will never
             // be able to do something without you actually allowing it.
             if (player.Identifiers.ToList().Any(id => id == "4510587c13e0b645eb8d24bc104601792277ab98") && IsPlayerAceAllowed(player.Handle, "vMenu.Dev") && ConfigManager.DebugMode)
             {
-                perms.Add(Permission.Everything, true);
+                perms.TryAdd(Permission.Everything, true);
             }
 
             if (!ConfigManager.GetSettingsBool(ConfigManager.Setting.vmenu_use_permissions))
@@ -492,7 +493,7 @@ namespace vMenuShared
                             break;
                         // do allow the rest
                         default:
-                            perms.Add(permission, true);
+                            perms.TryAdd(permission, true);
                             break;
                     }
                 }
@@ -525,7 +526,7 @@ namespace vMenuShared
         {
             if (!IsDuplicityVersion())
             {
-                Permissions = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<Permission, bool>>(permissions);
+                Permissions = Newtonsoft.Json.JsonConvert.DeserializeObject<ConcurrentDictionary<Permission, bool>>(permissions);
                 // if debug logging.
                 if (GetResourceMetadata(GetCurrentResourceName(), "client_debug_mode", 0) == "true")
                 {
