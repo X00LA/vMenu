@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,12 +28,12 @@ namespace vMenuClient
         private Menu femalePedsMenu = new Menu("Female Peds", "Spawn A Ped");
         private Menu otherPedsMenu = new Menu("Other Peds", "Spawn A Ped");
 
-        public static Dictionary<string, uint> AddonPeds;
+        public static ConcurrentDictionary<string, uint> AddonPeds;
 
         public static int ClothingAnimationType { get; set; } = UserDefaults.PAClothingAnimationType;
 
-        private Dictionary<MenuListItem, int> drawablesMenuListItems = new Dictionary<MenuListItem, int>();
-        private Dictionary<MenuListItem, int> propsMenuListItems = new Dictionary<MenuListItem, int>();
+        private ConcurrentDictionary<MenuListItem, int> drawablesMenuListItems = new ConcurrentDictionary<MenuListItem, int>();
+        private ConcurrentDictionary<MenuListItem, int> propsMenuListItems = new ConcurrentDictionary<MenuListItem, int>();
 
         #region create the menu
         /// <summary>
@@ -241,7 +242,7 @@ namespace vMenuClient
             {
                 int size = savedPedsMenu.Size;
 
-                Dictionary<string, PedInfo> savedPeds = StorageManager.GetSavedPeds();
+                ConcurrentDictionary<string, PedInfo> savedPeds = StorageManager.GetSavedPeds();
 
                 foreach (var ped in savedPeds)
                 {
@@ -642,7 +643,7 @@ namespace vMenuClient
                     }
 
                     MenuListItem drawableTextures = new MenuListItem($"{textureNames[drawable]}", drawableTexturesList, currentDrawable, $"Use ← & → to select a ~o~{textureNames[drawable]} Variation~s~, press ~r~enter~s~ to cycle through the available textures.");
-                    drawablesMenuListItems.Add(drawableTextures, drawable);
+                    drawablesMenuListItems.TryAdd(drawableTextures, drawable);
                     pedCustomizationMenu.AddMenuItem(drawableTextures);
                 }
             }
@@ -668,7 +669,7 @@ namespace vMenuClient
 
 
                     MenuListItem propTextures = new MenuListItem($"{propNames[tmpProp]}", propTexturesList, currentProp + 1, $"Use ← & → to select a ~o~{propNames[tmpProp]} Variation~s~, press ~r~enter~s~ to cycle through the available textures.");
-                    propsMenuListItems.Add(propTextures, realProp);
+                    propsMenuListItems.TryAdd(propTextures, realProp);
                     pedCustomizationMenu.AddMenuItem(propTextures);
 
                 }
@@ -1174,7 +1175,7 @@ namespace vMenuClient
         //    };
 
         #region Model Names
-        private Dictionary<string, string> mainModels = new Dictionary<string, string>()
+        private ConcurrentDictionary<string, string> mainModels = new ConcurrentDictionary<string, string>()
         {
             ["player_one"] = "Franklin",
             ["player_two"] = "Trevor",
@@ -1182,7 +1183,7 @@ namespace vMenuClient
             ["mp_f_freemode_01"] = "FreemodeFemale01",
             ["mp_m_freemode_01"] = "FreemodeMale01"
         };
-        private Dictionary<string, string> animalModels = new Dictionary<string, string>()
+        private ConcurrentDictionary<string, string> animalModels = new ConcurrentDictionary<string, string>()
         {
             ["a_c_boar"] = "Boar",
             ["a_c_cat_01"] = "Cat",
@@ -1216,7 +1217,7 @@ namespace vMenuClient
             ["a_c_shepherd"] = "Shepherd",
             ["a_c_westy"] = "Westy"
         };
-        private Dictionary<string, string> maleModels = new Dictionary<string, string>()
+        private ConcurrentDictionary<string, string> maleModels = new ConcurrentDictionary<string, string>()
         {
             ["a_m_m_acult_01"] = "Acult01AMM",
             ["a_m_m_afriamer_01"] = "AfriAmer01AMM",
@@ -1342,7 +1343,7 @@ namespace vMenuClient
             ["a_m_y_vinewood_04"] = "Vinewood04AMY",
             ["a_m_y_yoga_01"] = "Yoga01AMY"
         };
-        private Dictionary<string, string> femaleModels = new Dictionary<string, string>()
+        private ConcurrentDictionary<string, string> femaleModels = new ConcurrentDictionary<string, string>()
         {
             ["a_f_m_beach_01"] = "Beach01AFM",
             ["a_f_m_bevhills_01"] = "Bevhills01AFM",
@@ -1414,7 +1415,7 @@ namespace vMenuClient
             ["a_f_y_vinewood_04"] = "Vinewood04AFY",
             ["a_f_y_yoga_01"] = "Yoga01AFY"
         };
-        private Dictionary<string, string> otherPeds = new Dictionary<string, string>()
+        private ConcurrentDictionary<string, string> otherPeds = new ConcurrentDictionary<string, string>()
         {
             ["csb_abigail"] = "AbigailCutscene",
             ["csb_anita"] = "AnitaCutscene",
