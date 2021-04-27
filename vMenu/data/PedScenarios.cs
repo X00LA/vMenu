@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,7 +33,7 @@ namespace vMenuClient
         /// <summary>
         /// All scenario names (readable version) linked to the actual scenario strings (code names).
         /// </summary>
-        public static Dictionary<string, string> ScenarioNames = new Dictionary<string, string>
+        public static ConcurrentDictionary<string, string> ScenarioNames = new ConcurrentDictionary<string, string>
         {
             ["AA Drink Coffee"] = "WORLD_HUMAN_AA_COFFEE",
             ["AA Smoke Cig"] = "WORLD_HUMAN_AA_SMOKE",
