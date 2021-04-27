@@ -30,6 +30,7 @@ namespace vMenuClient
         public bool PlayerIsIgnored { get; private set; } = UserDefaults.EveryoneIgnorePlayer;
         public bool PlayerStayInVehicle { get; private set; } = UserDefaults.PlayerStayInVehicle;
         public bool PlayerFrozen { get; private set; } = false;
+        public bool PlayerMobileRadio { get; private set; } = false;
         private Menu CustomDrivingStyleMenu = new Menu("Driving Style", "Custom Driving Style");
 
         /// <summary>
@@ -55,6 +56,7 @@ namespace vMenuClient
             MenuCheckboxItem everyoneIgnoresPlayerCheckbox = new MenuCheckboxItem("Everyone Ignore Player", "Everyone will leave you alone.", PlayerIsIgnored);
             MenuCheckboxItem playerStayInVehicleCheckbox = new MenuCheckboxItem("Stay In Vehicle", "When this is enabled, NPCs will not be able to drag you out of your vehicle if they get angry at you.", PlayerStayInVehicle);
             MenuCheckboxItem playerFrozenCheckbox = new MenuCheckboxItem("Freeze Player", "Freezes your current location.", PlayerFrozen);
+            MenuCheckboxItem playerMobileRadioCheckbox = new MenuCheckboxItem("Mobile Radio", "Turns on the mobile radio.", PlayerMobileRadio);
 
             // Wanted level options
             List<string> wantedLevelList = new List<string> { "No Wanted Level", "1", "2", "3", "4", "5" };
@@ -113,6 +115,9 @@ namespace vMenuClient
             if (IsAllowed(Permission.PONoRagdoll))
             {
                 menu.AddMenuItem(noRagdollCheckbox);
+            }
+            {
+                menu.AddMenuItem(playerMobileRadioCheckbox);
             }
             if (IsAllowed(Permission.PONeverWanted))
             {
@@ -408,6 +413,25 @@ namespace vMenuClient
                     }
                 }
             };
+            
+             // Player Mobile Radio toggled
+            else if (item == playerMobileRadioCheckbox)
+            {
+                PlayerMobileRadio = _checked;
+
+                if (IsMobilePhoneRadioActive())
+                {
+                    SetMobilePhoneRadioState(false);
+                    SetAudioFlag("MobileRadioInGame", false);
+                    SetAudioFlag("AllowRadioDuringSwitch", false);
+                }                    
+                else
+                {
+                    SetMobilePhoneRadioState(true);
+                    SetAudioFlag("MobileRadioInGame", true);
+                    SetAudioFlag("AllowRadioDuringSwitch", true);
+                }
+            }
 
             // List selections
             menu.OnListItemSelect += (sender, listItem, listIndex, itemIndex) =>
