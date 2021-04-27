@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -107,15 +108,15 @@ namespace vMenuClient
         private void SetAddons()
         {
             // reset addons
-            VehicleSpawner.AddonVehicles = new Dictionary<string, uint>();
-            WeaponOptions.AddonWeapons = new Dictionary<string, uint>();
-            PlayerAppearance.AddonPeds = new Dictionary<string, uint>();
+            VehicleSpawner.AddonVehicles = new ConcurrentDictionary<string, uint>();
+            WeaponOptions.AddonWeapons = new ConcurrentDictionary<string, uint>();
+            PlayerAppearance.AddonPeds = new ConcurrentDictionary<string, uint>();
 
             string jsonData = LoadResourceFile(GetCurrentResourceName(), "config/addons.json") ?? "{}";
             try
             {
                 // load new addons.
-                var addons = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(jsonData);
+                var addons = JsonConvert.DeserializeObject<ConcurrentDictionary<string, List<string>>>(jsonData);
 
                 // load vehicles
                 if (addons.ContainsKey("vehicles"))
@@ -123,7 +124,7 @@ namespace vMenuClient
                     foreach (string addon in addons["vehicles"])
                     {
                         if (!VehicleSpawner.AddonVehicles.ContainsKey(addon))
-                            VehicleSpawner.AddonVehicles.Add(addon, (uint)GetHashKey(addon));
+                            VehicleSpawner.AddonVehicles.TryAdd(addon, (uint)GetHashKey(addon));
                         else
                             Debug.WriteLine($"[vMenu] [Error] Your addons.json file contains 2 or more entries with the same vehicle name! ({addon}) Please remove duplicate lines!");
                     }
@@ -135,7 +136,7 @@ namespace vMenuClient
                     foreach (string addon in addons["weapons"])
                     {
                         if (!WeaponOptions.AddonWeapons.ContainsKey(addon))
-                            WeaponOptions.AddonWeapons.Add(addon, (uint)GetHashKey(addon));
+                            WeaponOptions.AddonWeapons.TryAdd(addon, (uint)GetHashKey(addon));
                         else
                             Debug.WriteLine($"[vMenu] [Error] Your addons.json file contains 2 or more entries with the same weapon name! ({addon}) Please remove duplicate lines!");
                     }
@@ -147,7 +148,7 @@ namespace vMenuClient
                     foreach (string addon in addons["peds"])
                     {
                         if (!PlayerAppearance.AddonPeds.ContainsKey(addon))
-                            PlayerAppearance.AddonPeds.Add(addon, (uint)GetHashKey(addon));
+                            PlayerAppearance.AddonPeds.TryAdd(addon, (uint)GetHashKey(addon));
                         else
                             Debug.WriteLine($"[vMenu] [Error] Your addons.json file contains 2 or more entries with the same ped name! ({addon}) Please remove duplicate lines!");
                     }
