@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
@@ -18,14 +19,14 @@ namespace vMenuClient
     public static class StorageManager
     {
         /// <summary>
-        /// Save Dictionary(string, string) to local storage.
+        /// Save ConcurrentDictionary(string, string) to local storage.
         /// </summary>
         /// <param name="saveName">Name (including prefix) to save.</param>
         /// <param name="data">Data (dictionary) to save.</param>
         /// <param name="overrideExistingData">When true, will override existing save data with the same name. 
         /// If false, it will cancel the save if existing data is found and return false.</param>
         /// <returns>A boolean value indicating if the save was successful.</returns>
-        public static bool SaveDictionary(string saveName, Dictionary<string, string> data, bool overrideExistingData)
+        public static bool SaveDictionary(string saveName, ConcurrentDictionary<string, string> data, bool overrideExistingData)
         {
             // If the savename doesn't exist yet or we're allowed to override it.
             if (GetResourceKvpString(saveName) == null || overrideExistingData)
@@ -52,9 +53,9 @@ namespace vMenuClient
         /// Gets a collection of saved peds.
         /// </summary>
         /// <returns></returns>
-        public static Dictionary<string, PedInfo> GetSavedPeds()
+        public static ConcurrentDictionary<string, PedInfo> GetSavedPeds()
         {
-            Dictionary<string, PedInfo> savedPeds = new Dictionary<string, PedInfo>();
+            ConcurrentDictionary<string, PedInfo> savedPeds = new ConcurrentDictionary<string, PedInfo>();
 
             int handle = StartFindKvp("ped_");
             while (true)
@@ -64,7 +65,7 @@ namespace vMenuClient
                 {
                     break;
                 }
-                savedPeds.Add(kvp, JsonConvert.DeserializeObject<PedInfo>(GetResourceKvpString(kvp)));
+                savedPeds.TryAdd(kvp, JsonConvert.DeserializeObject<PedInfo>(GetResourceKvpString(kvp)));
             }
             return savedPeds;
         }
