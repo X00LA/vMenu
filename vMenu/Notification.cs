@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -303,7 +304,7 @@ namespace vMenuClient
             EXIT_INTERIOR_HELP_MESSAGE
         }
 
-        private static Dictionary<Label, KeyValuePair<string, string>> labels = new Dictionary<Label, KeyValuePair<string, string>>()
+        private static ConcurrentDictionary<Label, KeyValuePair<string, string>> labels = new ConcurrentDictionary<Label, KeyValuePair<string, string>>()
         {
             [Label.EXIT_INTERIOR_HELP_MESSAGE] = new KeyValuePair<string, string>("EXIT_INTERIOR_HELP_MESSAGE", "Press ~INPUT_CONTEXT~ to exit the building.")
         };
