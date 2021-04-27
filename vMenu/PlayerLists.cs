@@ -1,6 +1,7 @@
 ﻿using CitizenFX.Core;
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -125,14 +126,14 @@ namespace vMenuClient
     public class InfinityPlayerList : IPlayerList
     {
         private readonly PlayerList playerList;
-        private readonly Dictionary<int, InfinityPlayer> remotePlayerList;
+        private readonly ConcurrentDictionary<int, InfinityPlayer> remotePlayerList;
 
         private int updatingPlayerList;
 
         public InfinityPlayerList(PlayerList playerList)
         {
             this.playerList = playerList;
-            this.remotePlayerList = new Dictionary<int, InfinityPlayer>();
+            this.remotePlayerList = new ConcurrentDictionary<int, InfinityPlayer>();
         }
 
         private IEnumerator<IPlayer> GetEnumeratorInternal()
